@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bill Splitter</title>
+  <meta name="description" content="An elegant and simple bill splitting web app in INR with a refined greenish golden theme." />
+  <meta property="og:title" content="Bill Splitter" />
+  <meta property="og:description" content="An elegant and simple bill splitting web app in INR with a refined greenish golden theme." />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="split-app-wrapper">
+    <!-- Main Two-Pane Split Card -->
+    <div class="split-card">
+      
+      <!-- LEFT PANE: Form & Inputs -->
+      <section class="pane pane-left">
+        <header class="brand-header">
+          <div class="brand-crest">
+            <span class="crest-symbol">₹</span>
+          </div>
+          <div class="brand-titles">
+            <h1>Bill Splitter</h1>
+            <p class="brand-tagline">Fair group splits down to the exact paise</p>
+          </div>
+        </header>
+
+        <form id="splitterForm" class="bill-form" onsubmit="event.preventDefault();">
+          <!-- Occasion Input -->
+          <div class="form-group">
+            <label for="occasion">Occasion / Event</label>
+            <div class="input-wrapper">
+              <input 
+                type="text" 
+                id="occasion" 
+                placeholder="e.g. Team Dinner, Chai & Samosa, Trip" 
+                autocomplete="off"
+              />
+            </div>
+          </div>
+
+          <!-- Bill Amount Input -->
+          <div class="form-group">
+            <label for="billAmount">Total Bill Amount</label>
+            <div class="input-wrapper input-with-prefix">
+              <span class="currency-prefix">₹</span>
+              <input 
+                type="number" 
+                id="billAmount" 
+                placeholder="0.00" 
+                step="0.01" 
+                min="0"
+              />
+            </div>
+          </div>
+
+          <!-- Number of People Input with Stepper -->
+          <div class="form-group">
+            <div class="label-row">
+              <label for="numPeople">Number of People</label>
+              <div class="quick-pills">
+                <button type="button" class="pill-btn" data-count="2">2</button>
+                <button type="button" class="pill-btn" data-count="3">3</button>
+                <button type="button" class="pill-btn" data-count="4">4</button>
+                <button type="button" class="pill-btn" data-count="5">5</button>
+              </div>
+            </div>
+            <div class="stepper-wrapper">
+              <button type="button" id="decrementPeople" class="stepper-btn" title="Decrease person count">−</button>
+              <input 
+                type="number" 
+                id="numPeople" 
+                placeholder="e.g. 4" 
+                step="1" 
+                min="1"
+              />
+              <button type="button" id="incrementPeople" class="stepper-btn" title="Increase person count">+</button>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="btn-group">
+            <button type="button" id="calculateBtn" class="primary-btn">
+              <span class="btn-text">Calculate Split</span>
+              <span class="btn-arrow">→</span>
+            </button>
+            <button type="button" id="clearBtn" class="secondary-btn" title="Clear form & saved data">
+              Reset
+            </button>
+          </div>
+        </form>
+
+        <!-- Inline error alert (shown alongside alert() dialog) -->
+        <div id="errorAlert" class="error-alert hidden"></div>
+      </section>
+
+      <!-- RIGHT PANE: Results / Summary -->
+      <section class="pane pane-right">
+        
+        <!-- Empty Placeholder State -->
+        <div id="emptyState" class="empty-state">
+          <div class="empty-crest">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16l3-2 3 2 3-2 3 2 3-2 3 2V4a2 2 0 0 0-2-2z"/>
+              <path d="M9 10h6"/>
+              <path d="M9 14h6"/>
+            </svg>
+          </div>
+          <h3>Ready to Split</h3>
+          <p>Enter the occasion, bill amount in ₹, and party size on the left, then click <strong>Calculate Split</strong>.</p>
+        </div>
+
+        <!-- Calculated Results Container -->
+        <div id="resultContainer" class="result-container hidden">
+          
+          <div class="result-top-bar">
+            <span class="occasion-chip" id="resultOccasion">Occasion</span>
+            <div class="result-actions">
+              <button type="button" id="copyBtn" class="copy-chip" title="Copy split summary">
+                📋 Copy
+              </button>
+              <span class="storage-chip" title="Saved in local storage">💾 Saved</span>
+            </div>
+          </div>
+
+          <!-- Highlight Summary Card -->
+          <div class="summary-hero">
+            <div class="summary-caption">Each Person Pays</div>
+            <div class="summary-figure" id="avgShareDisplay">₹0.00</div>
+            <div class="summary-subtitle" id="summaryMeta">Total: ₹0.00 for 0 people</div>
+          </div>
+
+          <!-- Individual Share Breakdown -->
+          <div class="shares-card">
+            <div class="shares-card-header">
+              <h3>Individual Breakdown</h3>
+              <span class="exact-badge">Exact to the Paise</span>
+            </div>
+            
+            <div id="sharesList" class="shares-list">
+              <!-- Dynamically populated via script.js -->
+            </div>
+          </div>
+
+          <!-- Exact Match Audit Box -->
+          <div class="audit-strip">
+            <div class="audit-item">
+              <span class="audit-label">Total Bill</span>
+              <strong id="auditTotal" class="audit-val">₹0.00</strong>
+            </div>
+            <div class="audit-divider"></div>
+            <div class="audit-item">
+              <span class="audit-label">Sum of Shares</span>
+              <strong id="auditSum" class="audit-val">₹0.00</strong>
+            </div>
+            <div class="audit-check" id="auditStatus">
+              ✓ Exact Match
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>

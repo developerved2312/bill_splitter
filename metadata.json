@@ -1,0 +1,6 @@
+{
+  "name": "Bill Splitter",
+  "description": "An elegant and simple bill splitting web app in INR with a refined greenish golden theme.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
